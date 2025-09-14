@@ -265,11 +265,12 @@ func wind(object):
 			object.velocity += delta_velocity * 0.3
 
 	elif object.is_in_group("movable_objects") and object.is_class("RigidBody3D"):
-		if is_outdoor(object) and not is_something_blocking_wind(object) and is_instance_valid(object):
-			var wind_vel = Wind_Direction * Wind_speed 
+		if is_instance_valid(object) and is_outdoor(object) and not is_something_blocking_wind(object):
+			var wind_vel = Wind_Direction * Wind_speed
 			var delta_velocity = wind_vel - object.linear_velocity
-
-			object.linear_velocity = delta_velocity * 0.3
+			
+			# Aplica fuerza en vez de modificar directamente la velocidad
+			object.apply_central_force(delta_velocity * 0.3)
 
 	elif object.is_in_group("movable_objects") and object.is_class("StaticBody3D"):
 		if is_instance_valid(object):

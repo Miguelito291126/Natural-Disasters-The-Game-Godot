@@ -74,43 +74,17 @@ color = Color(0, 1, 1, 1)
 size = Vector2(10000, 10000)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_go6sb"]
-properties/0/path = NodePath("spark/light:rotation")
+properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath("spark/light:emitting")
+properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
-properties/2/path = NodePath("spark/light/star:emitting")
+properties/2/path = NodePath(".:scale")
 properties/2/spawn = true
 properties/2/replication_mode = 1
-properties/3/path = NodePath("spark/light/star:scale")
-properties/3/spawn = true
-properties/3/replication_mode = 1
-properties/4/path = NodePath("spark/light/star:rotation")
-properties/4/spawn = true
-properties/4/replication_mode = 1
-properties/5/path = NodePath("spark/light/star:position")
-properties/5/spawn = true
-properties/5/replication_mode = 1
-properties/6/path = NodePath(".:position")
-properties/6/spawn = true
-properties/6/replication_mode = 1
-properties/7/path = NodePath(".:scale")
-properties/7/spawn = true
-properties/7/replication_mode = 1
-properties/8/path = NodePath(".:rotation")
-properties/8/spawn = true
-properties/8/replication_mode = 1
 
-[node name="thunder" type="Node3D" groups=["Thunder"]]
-script = ExtResource("1_ig5to")
-
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
-volume_db = 35.0
-max_db = 6.0
-max_distance = 4096.0
-
-[node name="spark" type="GPUParticles3D" parent="."]
+[node name="spark" type="GPUParticles3D"]
 material_override = SubResource("StandardMaterial3D_jem84")
 emitting = false
 amount = 1
@@ -120,8 +94,9 @@ visibility_aabb = AABB(-1000, -1000, -757.075, 2000, 2000, 1514.15)
 local_coords = true
 process_material = SubResource("ParticleProcessMaterial_fjbmq")
 draw_pass_1 = SubResource("QuadMesh_8jrdf")
+script = ExtResource("1_ig5to")
 
-[node name="light" type="GPUParticles3D" parent="spark"]
+[node name="light" type="GPUParticles3D" parent="."]
 material_override = SubResource("StandardMaterial3D_ghvqt")
 emitting = false
 amount = 1
@@ -131,7 +106,7 @@ visibility_aabb = AABB(-10000, -10000, -10000, 20000, 20000, 20000)
 process_material = SubResource("ParticleProcessMaterial_1lfm6")
 draw_pass_1 = SubResource("QuadMesh_tdmw4")
 
-[node name="star" type="GPUParticles3D" parent="spark/light"]
+[node name="star" type="GPUParticles3D" parent="light"]
 material_override = SubResource("StandardMaterial3D_e6wr2")
 emitting = false
 amount = 1
@@ -141,7 +116,10 @@ visibility_aabb = AABB(-500, -499.988, -500, 1000, 1000, 1000)
 process_material = SubResource("ParticleProcessMaterial_xpfg1")
 draw_pass_1 = SubResource("QuadMesh_q3mvv")
 
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+volume_db = 35.0
+max_db = 6.0
+max_distance = 4096.0
+
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_go6sb")
-
-[connection signal="finished" from="spark" to="." method="_on_spark_finished"]

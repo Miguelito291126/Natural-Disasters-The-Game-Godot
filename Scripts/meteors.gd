@@ -6,14 +6,7 @@ var is_volcano_rock = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if not is_volcano_rock:
-		$CollisionShape3D.scale = Vector3(rand_num,rand_num,rand_num)
-		$Meteorite.scale = Vector3(rand_num,rand_num,rand_num)
-		$Fire.process_material.emission_sphere_radius = rand_num
-		$Fire/Smoke.process_material.emission_sphere_radius = rand_num
-		self.gravity_scale = Globals.gravity
-	else:
-		self.gravity_scale = Globals.gravity
+	self.gravity_scale = Globals.gravity
 
 func _on_body_entered(_body):
 	if _body == self:

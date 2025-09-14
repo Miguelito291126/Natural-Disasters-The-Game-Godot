@@ -34,13 +34,10 @@ animation/import_rest_as_RESET=false
 import_script/path=""
 _subresources={
 "nodes": {
-"PATH:Handle_Back_cell_113": {
+"PATH:Door_cell_001": {
 "import/skip_import": true
 },
-"PATH:Handle_Front_cell_062": {
-"import/skip_import": true
-},
-"PATH:Handle_Front_cell_110": {
+"PATH:Door_cell_056": {
 "import/skip_import": true
 }
 }

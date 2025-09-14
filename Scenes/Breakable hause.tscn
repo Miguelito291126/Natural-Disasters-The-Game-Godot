@@ -3,3 +3,5 @@
 [ext_resource type="PackedScene" uid="uid://b410wmhh5ywm6" path="res://Models/Blend Format/Breakable hause.blend" id="1_mcvrf"]
 
 [node name="Breakable hause" groups=["movable_objects"] instance=ExtResource("1_mcvrf")]
+collision_layer = 13
+collision_mask = 13

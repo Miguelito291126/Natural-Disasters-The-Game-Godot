@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://bgj3reef73qvg"]
+
+[ext_resource type="PackedScene" uid="uid://w8budjn2m22a" path="res://Scenes/earthquake.tscn" id="1_umnem"]
+
+[node name="earthquake_icon" type="SubViewport"]
+size = Vector2i(128, 128)
+render_target_update_mode = 4
+
+[node name="Earthquake" parent="." instance=ExtResource("1_umnem")]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.964174, 0, 0.26527, 0, 1, 0, -0.26527, 0, -0.964174, 241.913, 224.774, -696.453)

@@ -1,10 +1,10 @@
 extends Node3D
 
 @export var magnitude = 7
-var magnitude_modifier = 0
+@export var magnitude_modifier = 0
 var next_physics_time = Time.get_ticks_msec()
 var SpawnTime = Time.get_ticks_msec()
-var Life = [15,20]
+@export var Life = [15,20]
 
 
 @onready var start_weak_earthquake = $earquake_start_sound_weak
@@ -92,7 +92,7 @@ func do_physics():
 	
 	# Aplicar efectos a las entidades
 	for v in get_tree().get_nodes_in_group("movable_objects"):
-		if v.get_class() == "RigidBody3D":
+		if v.is_class("RigidBody3D"):
 			var vel_mod = 1 - clamp(v.get_linear_velocity().length() / 2000, 0, 1)
 			var ang_v = ang_vv * vel_mod
 			
@@ -135,7 +135,7 @@ func do_physics():
 				if randi_range(1, 2) == 1:
 					v.apply_impulse(ang_v * 40)
 					unfreeze(v, mag)
-		elif v.get_class() == "StaticBody3D":
+		elif v.is_class("StaticBody3D"):
 			if randi_range(1,2) == 1:
 				destroy(v)
 	
@@ -395,8 +395,3 @@ func magnitude_twelve():
 		if v.is_on_floor():
 			send_clientside_effects(v, 38)
 	do_physics()
-
-
-
-
-

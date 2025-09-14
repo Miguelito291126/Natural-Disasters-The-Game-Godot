@@ -25,30 +25,26 @@ func load_spawnlist_entities():
 		for f in files:
 			if f.ends_with(".tscn"):
 				var node = load(directory.get_current_dir() + "/" + f).instantiate()
-				if node is Node3D:
-					var icon_path = "res://icons/" + node.name + "_icon.png"
-					if ResourceLoader.exists(icon_path):
-						spawnlist.append(node)
+				if node is RigidBody3D or node is StaticBody3D or node is Area3D or node is GPUParticles3D:
+					spawnlist.append(node)
 
 
 func load_buttons():
 	for i in spawnlist:
 		var icon_path = "res://icons/" + i.name + "_icon.png"
-		if ResourceLoader.exists(icon_path): # 🔑 comprueba que el archivo exista
-			var entity = entity_scene.instantiate()
-			var label = entity.get_node("Label")
-			label.text = i.name
-			label.add_theme_font_size_override("FontSize", 20)
-			label.custom_minimum_size = Vector2(150, 150) # cada celda fija
-			var icon = entity.get_node("Icon")
-			icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-			icon.texture_normal = load(icon_path)	
-			icon.custom_minimum_size = Vector2(64, 64) # icono fijo
-			container.add_child(entity)
+		var entity = entity_scene.instantiate()
+		var label = entity.get_node("Label")
+		label.text = i.name
+		label.add_theme_font_size_override("FontSize", 20)
+		label.custom_minimum_size = Vector2(150, 150) # cada celda fija
+		var icon = entity.get_node("Icon")
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.texture_normal = load(icon_path)	
+		icon.custom_minimum_size = Vector2(64, 64) # icono fijo
+		container.add_child(entity)
 
-			icon.pressed.connect(func(): on_press(i))
-		else:
-			Globals.print_role("No icon for " + i.name)
+		icon.pressed.connect(func(): on_press(i))
+
 
 
 func on_press(i: Node):
@@ -59,10 +55,16 @@ func on_press(i: Node):
 
 	var player = get_parent()
 	var raycast = player.interactor
-	
+
 	if raycast.is_colliding():
+		var collision_point = raycast.get_collision_point()
+		var collision_normal = raycast.get_collision_normal()
+
 		var new_i = i.duplicate()
-		new_i.transform.origin = raycast.get_collision_point()
+
+		# Coloca el objeto encima del suelo, respetando la normal
+		new_i.transform.origin = collision_point + collision_normal * 0.5  # 0.5 es la altura de separación
+
 		spawnedobject.append(new_i)
 		Globals.map.add_child(new_i)
 

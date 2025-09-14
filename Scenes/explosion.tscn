@@ -51,7 +51,7 @@ properties/2/path = NodePath(".:scale")
 properties/2/spawn = true
 properties/2/replication_mode = 1
 
-[node name="Explosion" type="GPUParticles3D"]
+[node name="Explosion" type="GPUParticles3D" groups=["Explosion"]]
 material_override = SubResource("StandardMaterial3D_qtdo2")
 emitting = false
 amount = 200
@@ -63,7 +63,8 @@ process_material = SubResource("ParticleProcessMaterial_v0fus")
 draw_pass_1 = SubResource("SphereMesh_bjxpd")
 script = ExtResource("1_o7s6l")
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="Area3D" type="Area3D" parent="." groups=["Explosion"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0103197, 0.0393953, -0.0188904)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)

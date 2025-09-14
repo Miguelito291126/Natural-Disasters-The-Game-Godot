@@ -57,6 +57,8 @@ Hause=""
 Destrollable=""
 Tornado=""
 Thunder=""
+Explosion=""
+Pickable=""
 
 [importer_defaults]
 

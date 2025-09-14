@@ -1,4 +1,4 @@
-extends Node3D
+extends GPUParticles3D
 
 var explosion_scene = preload("res://Scenes/explosion.tscn")
 var lol = [preload("res://Sounds/disasters/nature/closethunder01.mp3"), preload("res://Sounds/disasters/nature/closethunder02.mp3"), preload("res://Sounds/disasters/nature/closethunder03.mp3"), preload("res://Sounds/disasters/nature/closethunder04.mp3"), preload("res://Sounds/disasters/nature/closethunder05.mp3")]
@@ -15,12 +15,12 @@ func _ready():
 	$AudioStreamPlayer3D.play()
 	
 	# Reproducir el efecto visual del rayo
-	$spark.one_shot = true
-	$spark/light.one_shot = true
-	$spark/light/star.one_shot = true
-	$spark.emitting = true
-	$spark/light.emitting = true
-	$spark/light/star.emitting = true
+	self.one_shot = true
+	$light.one_shot = true
+	$light/star.one_shot = true
+	self.emitting = true
+	$light.emitting = true
+	$light/star.emitting = true
 	
 
 func _on_spark_finished():

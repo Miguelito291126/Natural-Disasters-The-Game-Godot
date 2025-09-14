@@ -61,6 +61,7 @@ var min_bdradiation = 0
 @onready var animation_tree_node = $AnimationTree
 @onready var camera_node = $"head/Camera3D"
 @onready var head_node = $"head"
+@onready var hand_node = $"head/hand"
 @onready var esqueleto_node = $"Esqueleto"
 @onready var label = $Name
 @onready var temp_effect = $Temp_Effect/ColorRect
@@ -289,7 +290,7 @@ func _physics_process(delta):
 			velocity.y = JUMP_VELOCITY
 
 		if IsInWater or IsInLava:
-			velocity.y = JUMP_VELOCITY
+			velocity.y += JUMP_VELOCITY
 			
 	
 
@@ -323,16 +324,17 @@ func _physics_process(delta):
 	animation_tree_node.set("parameters/conditions/is_idle", is_on_floor() and input_dir.x == 0 and input_dir.y == 0)
 	animation_tree_node.set("parameters/conditions/is_walking", is_on_floor() and input_dir.x != 0 or input_dir.y != 0)
 
-		
-	
-
-
-
 	if interactor.is_colliding():
 		var target = interactor.get_collider()
 		if target != null and target.has_method("Interact"):
 			if Input.is_action_just_pressed("Interact"):
 				target.Interact()
+		elif target != null and target.is_in_group("Pickable"):
+			if Input.is_action_pressed("Interact"):
+				target.global_position = hand_node.global_position
+				target.global_rotation = hand_node.global_rotation
+				target.collision_layer = 2
+				target.linear_velocity = Vector3(0.1, 3, 0.1)
 		
 	move_and_slide()
 

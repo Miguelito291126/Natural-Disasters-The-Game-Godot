@@ -44,10 +44,10 @@ func Interact():
 
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
-	if body.is_in_group("Meteor") or body.is_in_group("Tsunami"):
+	if body.is_in_group("Meteor"):
 		destruction.destroy()
 
 
 func _on_area_3d_area_entered(area: Area3D) -> void:
-	if area.is_in_group("Tornado"):
+	if area.is_in_group("Tornado") or area.is_in_group("Tsunami") or area.is_in_group("Explosion"):
 		destruction.destroy()
