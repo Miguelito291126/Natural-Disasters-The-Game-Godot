@@ -1,9 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://do0o8aqqmmmlj"]
+[gd_scene load_steps=7 format=3 uid="uid://do0o8aqqmmmlj"]
 
 [ext_resource type="Script" uid="uid://btknoqxml4ghf" path="res://Scripts/Main Menu.gd" id="1_r752f"]
 [ext_resource type="AudioStream" uid="uid://cjhfwfsyaih6q" path="res://Sounds/music/waiting-time-175800.mp3" id="2_0u7u3"]
 [ext_resource type="Theme" uid="uid://cb8utilpq2brs" path="res://Resources/pause_and_menu_theme.tres" id="2_8ye2w"]
 [ext_resource type="Texture2D" uid="uid://66hhd27hjdj8" path="res://Icons/disasters.png" id="3_wgml2"]
+[ext_resource type="Script" uid="uid://cjfq4grssrun7" path="res://Scripts/server_browser.gd" id="4_n45e2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cp0ys"]
+bg_color = Color(0.61441946, 0.23361233, 0, 1)
 
 [node name="Main Menu" type="Control"]
 process_mode = 3
@@ -114,6 +118,7 @@ theme = ExtResource("2_8ye2w")
 text = "Username:"
 
 [node name="Label" type="Label" parent="Panel/Multiplayer"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 6
 theme = ExtResource("2_8ye2w")
@@ -126,7 +131,7 @@ layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
-placeholder_text = "Michael2911"
+placeholder_text = "Your Username"
 
 [node name="Ip label" type="Label" parent="Panel/Multiplayer"]
 process_mode = 3
@@ -141,7 +146,7 @@ layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
-placeholder_text = "127.0.0.1"
+placeholder_text = "Example: localhost"
 
 [node name="port label" type="Label" parent="Panel/Multiplayer"]
 process_mode = 3
@@ -156,7 +161,7 @@ layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("2_8ye2w")
 theme_override_font_sizes/font_size = 30
-placeholder_text = "25565"
+placeholder_text = "Example: 5555"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Panel/Multiplayer"]
 process_mode = 3
@@ -180,10 +185,57 @@ theme = ExtResource("2_8ye2w")
 text = "host
 "
 
+[node name="Multiplayer List" type="Button" parent="Panel/Multiplayer"]
+process_mode = 3
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("2_8ye2w")
+text = "Multiplayer List"
+
 [node name="Back" type="Button" parent="Panel/Multiplayer"]
 process_mode = 3
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("2_8ye2w")
+text = "Back"
+
+[node name="Multiplayer_list" type="VBoxContainer" parent="Panel"]
+process_mode = 3
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -456.0
+offset_top = -1080.0
+offset_right = 456.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("2_8ye2w")
+alignment = 1
+
+[node name="Label" type="Label" parent="Panel/Multiplayer_list"]
+layout_mode = 2
+text = "Ported connected to: 9993"
+
+[node name="Panel" type="Panel" parent="Panel/Multiplayer_list"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_cp0ys")
+script = ExtResource("4_n45e2")
+
+[node name="List" type="VBoxContainer" parent="Panel/Multiplayer_list/Panel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 137.0
+grow_horizontal = 2
+
+[node name="Back_multiplayer" type="Button" parent="Panel/Multiplayer_list"]
+process_mode = 3
+layout_mode = 2
 theme = ExtResource("2_8ye2w")
 text = "Back"
 
@@ -332,7 +384,9 @@ bus = &"Music"
 [connection signal="text_changed" from="Panel/Multiplayer/port" to="." method="_on_port_text_changed"]
 [connection signal="pressed" from="Panel/Multiplayer/HBoxContainer/join" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="Panel/Multiplayer/HBoxContainer/host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="Panel/Multiplayer/Multiplayer List" to="." method="_on_multiplayer_list_pressed"]
 [connection signal="pressed" from="Panel/Multiplayer/Back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="Panel/Multiplayer_list/Back_multiplayer" to="." method="_on_back_multiplayer_pressed"]
 [connection signal="toggled" from="Panel/Settings/fps" to="." method="_on_fps_toggled"]
 [connection signal="toggled" from="Panel/Settings/vsync" to="." method="_on_vsycn_toggled"]
 [connection signal="toggled" from="Panel/Settings/antialiasing" to="." method="_on_antialiasing_toggled"]

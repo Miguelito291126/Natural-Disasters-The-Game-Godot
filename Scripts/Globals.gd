@@ -1,10 +1,10 @@
 extends Node
 
 #Network
-@export var ip = "localhost"
-@export var port = 9999
-@export var points = 0
-@export var username = ""
+@export var ip: String
+@export var port: int = 5555
+@export var points: int
+@export var username: String
 @export var players_conected: Array[Node]
 @export var is_networking = false
 var enetMultiplayerpeer: ENetMultiplayerPeer
@@ -51,6 +51,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 @export var main: Node3D
 @export var main_menu: Control
 @export var map: Node3D
+@export var server_browser: Control
 @export var local_player: CharacterBody3D
 
 @export var bounding_radius_areas = {}
@@ -73,6 +74,14 @@ var volcano_scene = preload("res://Scenes/Volcano.tscn")
 var earthquake_scene = preload("res://Scenes/earthquake.tscn")
 
 @onready var timer = $Timer
+@onready var broadcast_Timer = $Broadcast_Timer
+
+@export var room_list = {"name": "name", "players": 0}
+@export var broadcaster_ip = "192.168.1.255"
+@export var lisener_port = port + 1
+@export var broadcaster_port = port - 1
+var broadcaster: PacketPeerUDP
+var lisener: PacketPeerUDP
 
 func convert_MetoSU(metres):
 	return (metres * 39.37) / 0.75
@@ -355,9 +364,10 @@ func hostwithport(port_int):
 				await get_tree().create_timer(2).timeout
 
 				UPNP_setup()
+				SetUpBroadcast(username)
 				LoadScene.load_scene(main_menu, "map")
 			else:
-				UPNP_setup()
+				SetUpBroadcast(username)
 				LoadScene.load_scene(main_menu, "map")
 	else:
 		print_role("Fatal Error in server")
@@ -433,6 +443,10 @@ func _exit_tree() -> void:
 	Globals.Wind_Direction_target = Globals.Wind_Direction_original
 	Globals.Wind_speed_target = Globals.Wind_speed_original
 
+	CloseUp()
+
+
+
 func _process(_delta):
 	if is_networking:
 		if not multiplayer.is_server(): 
@@ -459,6 +473,7 @@ func _ready():
 	multiplayer.server_disconnected.connect(server_disconect)
 	multiplayer.connected_to_server.connect(server_connected)
 	multiplayer.connection_failed.connect(server_fail)
+
 		
 func player_join(peer_id):
 	if is_networking:
@@ -725,5 +740,44 @@ func remove_all_destrolled_nodes():
 	for i in destrolled_node:
 		remove_destrolled_nodes(i)
 
+func SetUpLisener():
+	lisener = PacketPeerUDP.new()
+	var ok = lisener.bind(lisener_port)
+	if ok == OK:
+		print_role("Lisener port %s binded!!" % lisener_port)
+		if server_browser != null:
+			server_browser.get_parent().get_node("Label").text = "Lisener port %s binded!!" % lisener_port
+	else:
+		print_role("Lisener port %s FAILED!!" % lisener_port)
+		if server_browser != null:
+			server_browser.get_parent().get_node("Label").text = "Lisener port %s FAILED!!" % lisener_port
 
 	
+func CloseUp():
+	lisener.close()
+
+	if broadcaster != null:
+		broadcaster.close()
+
+	broadcast_Timer.stop()
+
+func SetUpBroadcast(Name):
+	room_list.name = Name
+	room_list.players = players_conected.size()
+
+	broadcaster = PacketPeerUDP.new()
+	broadcaster.set_broadcast_enabled(true)
+	broadcaster.set_dest_address(broadcaster_ip, lisener_port)
+
+	var ok = broadcaster.bind(broadcaster_port)
+	if ok == OK:
+		print_role("Broadcaster port %s binded!!" % broadcaster_port)
+	else:
+		print_role("Broadcaster port %s FAILED!!" % broadcaster_port)
+
+func _on_broadcast_timer_timeout() -> void:
+	room_list.players = players_conected.size()
+	var data = JSON.stringify(room_list)
+	var packet = data.to_ascii_buffer()
+	if broadcaster != null:
+		broadcaster.put_packet(packet)

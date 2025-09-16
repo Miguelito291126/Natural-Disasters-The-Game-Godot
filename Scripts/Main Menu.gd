@@ -3,6 +3,7 @@ extends Control
 @onready var main_menu = $Panel/Menu
 @onready var tittle = $Panel/Menu/HBoxContainer/Title
 @onready var Multiplayer = $Panel/Multiplayer
+@onready var Multiplayer_list = $Panel/Multiplayer_list
 @onready var Settings = $Panel/Settings
 @onready var username = $Panel/Multiplayer/username
 @onready var ip_text = $Panel/Multiplayer/ip
@@ -60,8 +61,10 @@ func _ready():
 	tittle.show()
 	Multiplayer.hide()
 	Settings.hide()
+	Multiplayer_list.hide()
 
 	LoadGameScene()
+	Globals.SetUpLisener()
 
 	if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
 		Globals.print_role("Iniciando servidor...")
@@ -121,6 +124,9 @@ func _on_ip_text_changed(new_text:String):
 
 func _on_port_text_changed(new_text:String):
 	Globals.port = int(new_text)
+	Globals.lisener_port = int(new_text) + 1
+	Globals.broadcaster_port = int(new_text) - 1
+	Globals.SetUpLisener()
 
 
 func _on_join_pressed():
@@ -145,12 +151,14 @@ func _on_play_pressed():
 	main_menu.hide()
 	Multiplayer.show()
 	Settings.hide()
+	Multiplayer_list.hide()
 
 
 func _on_settings_pressed():
 	main_menu.hide()
 	Multiplayer.hide()
 	Settings.show()
+	Multiplayer_list.hide()
 
 
 func _on_exit_pressed():
@@ -179,6 +187,7 @@ func _on_back_pressed():
 	main_menu.show()
 	Multiplayer.hide()
 	Settings.hide()
+	Multiplayer_list.hide()
 
 
 func _on_username_text_changed(new_text:String):
@@ -226,3 +235,18 @@ func _on_volumen_music_value_changed(value):
 func _on_option_button_item_selected(index: int):
 	Globals.GlobalsData.quality = index
 	Globals.GlobalsData.save_file()
+
+
+func _on_multiplayer_list_pressed() -> void:
+	main_menu.hide()
+	Multiplayer.hide()
+	Settings.hide()
+	Multiplayer_list.show()
+
+
+
+func _on_back_multiplayer_pressed() -> void:
+	main_menu.hide()
+	Multiplayer.show()
+	Settings.hide()
+	Multiplayer_list.hide()
