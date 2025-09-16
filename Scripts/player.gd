@@ -65,9 +65,27 @@ var min_bdradiation = 0
 @onready var esqueleto_node = $"Esqueleto"
 @onready var label = $Name
 @onready var temp_effect = $Temp_Effect/ColorRect
+@onready var death_menu = $"Death Menu"
+@onready var fire_particles = $Fire
+
+@onready var sneeze_audio = $"head/Camera3D/sneeze audio"
+@onready var sneeze = $head/Camera3D/Sneeze
+
+@onready var vomit_audio = $head/Camera3D/Vomit
+@onready var vomit = $head/Camera3D/Vomit
+
+@onready var underwatereffect = $Underwater
+@onready var underlavaeffect = $UnderLava
+
+
+@onready var Rain_sound = $"Rain sound"
+@onready var Wind_sound = $"Wind sound"
+@onready var Wind_moderate_sound = $"Wind Morerate sound"
+@onready var Wind_extreme_sound = $"Wind Extreme sound"
 
 @onready var interactor: RayCast3D = $head/Camera3D/Interactor
-
+@onready var spotLight3D = $head/Camera3D/SpotLight3D
+@onready var spawn = $"../Spawn"
 
 func _enter_tree():
 	if Globals.is_networking:
@@ -80,36 +98,34 @@ func _exit_tree():
 @rpc("any_peer", "call_local")
 func damage(value):
 	if not god_mode:
-		setlife(hearth - value)
+		hearth = clamp(value, min_Hearth, Max_Hearth)
+
+		if hearth <= 0:
+			is_alive = false
+
+			Globals.points -= 1
+			
+			if not Globals.is_networking:
+				get_tree().paused = true
+
+			if is_multiplayer_authority():
+				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+				death_menu.show()
+		else:
+			is_alive = true
 
 func ignite(time):
 	IsOnFire = true
 	await get_tree().create_timer(time).timeout
 	IsOnFire = false
 
-func setlife(value):
-	hearth = clamp(value, min_Hearth, Max_Hearth)
-	if hearth <= 0:
-		is_alive = false
+func Sneeze():
+	sneeze_audio.play()
+	sneeze.emitting = true
 
-		Globals.points -= 1
-		
-		if not Globals.is_networking:
-			get_tree().paused = true
-
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-		
-		$"Death Menu".show()
-	else:
-		is_alive = true
-
-func sneeze():
-	$"head/Camera3D/sneeze audio".play()
-	$"head/Camera3D/Sneeze".emitting = true
-
-func vomit():	
-	$"head/Camera3D/vomit audio".play()
-	$"head/Camera3D/Vomit".emitting = true
+func Vomit():	
+	vomit_audio.play()
+	vomit.emitting = true
 
 func _ready():
 
@@ -165,15 +181,22 @@ func body_temp(delta):
 
 	if randi_range(1,25) == 25:
 		if alpha_cold != 0:
-			damage(alpha_hot + alpha_cold)	
-		elif alpha_hot != 0:	
-			damage(alpha_hot + alpha_cold)
+			if Globals.is_networking:
+				damage.rpc(alpha_hot + alpha_cold)	
+			else:
+				damage(alpha_hot + alpha_cold)	
+		elif alpha_hot != 0:
+
+			if Globals.is_networking:
+				damage.rpc(alpha_hot + alpha_cold)
+			else:
+				damage(alpha_hot + alpha_cold)
 
 	if body_temperature > 39 and randi() % 400 == 0:
-		vomit()
+		Vomit()
 
 	if body_temperature < 35 and randi() % 400 == 0:
-		sneeze()
+		Sneeze()
 
 func body_oxy(delta):
 	if Globals.oxygen <= 20 or Globals.is_inwater(self) or IsUnderWater or Globals.is_inlava(self) or IsUnderLava:
@@ -184,7 +207,10 @@ func body_oxy(delta):
 	
 	if body_oxygen <= 0:
 		if randi_range(1,25) == 25:
-			damage(randi_range(1,30))
+			if Globals.is_networking:
+				damage.rpc(randi_range(1,30))
+			else:
+				damage(randi_range(1,30))
 
 func body_rad(delta):
 	if Globals.bradiation >= 80 and Globals.is_outdoor(self) and Outdoor:
@@ -194,12 +220,15 @@ func body_rad(delta):
 
 	if body_bradiation >= 100:
 		if randi_range(1,25) == 25:
-			damage(randi_range(1,30))
+			if Globals.is_networking:
+				damage.rpc(randi_range(1,30))
+			else:
+				damage(randi_range(1,30))
 
 
 func Underwater_or_Underlava_effects():
-	$Underwater.visible = IsUnderWater
-	$UnderLava.visible = IsUnderLava	
+	underwatereffect.visible = IsUnderWater
+	underlavaeffect.visible = IsUnderLava	
 
 	if IsInLava:
 		ignite(10)
@@ -209,39 +238,44 @@ func Underwater_or_Underlava_effects():
 			IsOnFire = false	
 
 func IsOnFire_effects():
-	$Fire.emitting = IsOnFire
+	fire_particles.emitting = IsOnFire
 	if IsOnFire:
 		if randi_range(1,5) == 5:
-			damage(10)
+			if Globals.is_networking:
+				damage.rpc(10)
+			else:
+				damage(10)
+
+
 
 func rain_sound():
 	Globals.is_raining = rain_node.emitting and Globals.is_outdoor(self) and Outdoor
 	if Globals.is_raining:
-		if not $"Rain sound".playing:
-			$"Rain sound".play()
+		if not Rain_sound.playing:
+			Rain_sound.play()
 	else:
-		$"Rain sound".stop()
+		Rain_sound.stop()
 
 func wind_sound():
-	if body_wind > 0 and body_wind < 50:
-		if not $"Wind sound".playing:
-			$"Wind sound".play()
-			$"Wind Morerate sound".stop()
-			$"Wind Extreme sound".stop()
-	elif body_wind > 50 and body_wind < 100:
-		if not $"Wind Morerate sound".playing:
-			$"Wind sound".stop()
-			$"Wind Morerate sound".play()
-			$"Wind Extreme sound".stop()
+	if body_wind > 0 and body_wind <= 50:
+		if not Wind_sound.playing:
+			Wind_sound.play()
+			Wind_moderate_sound.stop()
+			Wind_moderate_sound.stop()
+	elif body_wind > 50 and body_wind <= 100:
+		if not Wind_moderate_sound.playing:
+			Wind_sound.stop()
+			Wind_moderate_sound.play()
+			Wind_extreme_sound.stop()
 	elif body_wind > 100:
-		if not $"Wind Extreme sound".playing:
-			$"Wind sound".stop()
-			$"Wind Morerate sound".stop()
-			$"Wind Extreme sound".play()
+		if not Wind_extreme_sound.playing:
+			Wind_sound.stop()
+			Wind_moderate_sound.stop()
+			Wind_extreme_sound.play()
 	else:
-		$"Wind sound".stop()
-		$"Wind Morerate sound".stop()
-		$"Wind Extreme sound".stop()
+		Wind_sound.stop()
+		Wind_moderate_sound.stop()
+		Wind_extreme_sound.stop()
 
 
 func _process(delta):
@@ -262,7 +296,9 @@ func _process(delta):
 	IsOnFire_effects()
 	rain_sound()
 	wind_sound()
-	
+
+
+
 
 func _physics_process(delta):
 	if Globals.is_networking:
@@ -282,7 +318,10 @@ func _physics_process(delta):
 			pass
 		else:
 			if fall_strength <= -90:
-				damage(50)
+				if Globals.is_networking:
+					damage.rpc(50)
+				else:
+					damage(50)
 
 	# Handle jump.
 	if Input.is_action_just_pressed("Jump"):
@@ -296,7 +335,7 @@ func _physics_process(delta):
 
 
 	if Input.is_action_just_pressed("Flashligh"):
-		$head/Camera3D/SpotLight3D.visible = !$head/Camera3D/SpotLight3D.visible
+		spotLight3D.visible = !spotLight3D.visible
 
 	if Input.is_action_pressed("Spring"):
 		SPEED = SPEED_RUN
@@ -375,7 +414,7 @@ func _reset_player():
 	body_oxygen = Max_oxygen
 	body_bradiation = min_bdradiation
 	velocity = Vector3(0,0,0)
-	position = $"../Spawn".position
+	position = spawn.position
 	IsUnderWater = false
 	IsUnderLava = false
 	IsInWater = false
