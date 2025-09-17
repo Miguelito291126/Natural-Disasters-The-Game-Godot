@@ -1,6 +1,11 @@
 extends CanvasLayer
 
 @onready var list = $Panel/List
+
+func _enter_tree() -> void:
+	if Globals.is_networking:
+		set_multiplayer_authority(get_parent().name.to_int())
+		
 func _ready():
 	if Globals.is_networking:
 		if not is_multiplayer_authority():

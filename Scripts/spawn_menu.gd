@@ -11,8 +11,18 @@ var entity_scene = preload("res://Scenes/entity.tscn")
 
 const RAY_LENGTH = 10000
 
+func _enter_tree() -> void:
+	if Globals.is_networking:
+		set_multiplayer_authority(get_parent().name.to_int())
+
 func _ready():
 	self.visible = false
+
+	if Globals.is_networking:
+		if not is_multiplayer_authority():
+			return
+
+
 	load_spawnlist_entities()
 	load_buttons()
 
@@ -48,6 +58,9 @@ func on_press(i: Node):
 	if Globals.is_networking:
 		if not multiplayer.is_server():
 			Globals.print_role("You not a host")
+			return
+		
+		if not is_multiplayer_authority():
 			return
 
 	var player = get_parent()
@@ -92,6 +105,10 @@ func remove():
 
 
 func _process(_delta):
+	if Globals.is_networking:
+		if not is_multiplayer_authority():
+			return
+
 	if Input.is_action_just_pressed("Spawnmenu"):
 		spawnmenu()
 

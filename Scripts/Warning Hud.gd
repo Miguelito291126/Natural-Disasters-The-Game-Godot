@@ -19,6 +19,9 @@ func _process(_delta):
 	if Globals.is_networking:
 		if not multiplayer.is_server():
 			return
+			
+		if not is_multiplayer_authority():
+			return
 
 
 	if Globals.started:
