@@ -16,12 +16,12 @@ func _enter_tree() -> void:
 		set_multiplayer_authority(get_parent().name.to_int())
 
 func _ready():
-	self.visible = false
-
 	if Globals.is_networking:
+		self.visible = false
 		if not is_multiplayer_authority():
 			return
 
+	self.visible = false
 
 	load_spawnlist_entities()
 	load_buttons()

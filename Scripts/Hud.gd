@@ -10,13 +10,21 @@ var NextHeartSoundTime = Time.get_unix_time_from_system()
 @onready var animation_player = $Panel/Panel2/Heart/AnimationPlayer
 
 func _ready() -> void:
+	if Globals.is_networking:
+		self.visible = is_multiplayer_authority()
+		if not is_multiplayer_authority():
+			return
+			
 	animation_player.play("Heartbeat")
 
-func _process(_delta):
-
+func _enter_tree() -> void:
 	if Globals.is_networking:
-		if not player.is_multiplayer_authority():
-			self.visible = player.is_multiplayer_authority()
+		set_multiplayer_authority(get_parent().name.to_int())
+
+func _process(_delta):
+	if Globals.is_networking:
+		self.visible = is_multiplayer_authority()
+		if not is_multiplayer_authority():
 			return
 		
 	self.visible = true

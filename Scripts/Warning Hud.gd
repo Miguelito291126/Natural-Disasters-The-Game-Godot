@@ -8,8 +8,8 @@ func _enter_tree():
 
 func _ready() -> void:
 	if Globals.is_networking:
+		self.visible = is_multiplayer_authority()
 		if not is_multiplayer_authority():
-			self.visible = is_multiplayer_authority()
 			return
 
 	self.visible = true
@@ -19,7 +19,7 @@ func _process(_delta):
 	if Globals.is_networking:
 		if not multiplayer.is_server():
 			return
-			
+
 		if not is_multiplayer_authority():
 			return
 

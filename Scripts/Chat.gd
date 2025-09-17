@@ -13,11 +13,12 @@ func _enter_tree():
 
 func _ready() -> void:
 	if Globals.is_networking:
+		self.visible = is_multiplayer_authority()
 		if not is_multiplayer_authority():
-			self.visible = is_multiplayer_authority()
 			return
 
 	self.visible = true
+	
 	autocomplete_methods = get_parent().get_script().get_script_method_list().map(func (x): return x.name)	
 
 

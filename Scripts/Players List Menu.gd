@@ -5,14 +5,18 @@ extends CanvasLayer
 func _enter_tree() -> void:
 	if Globals.is_networking:
 		set_multiplayer_authority(get_parent().name.to_int())
-		
+
 func _ready():
+
 	if Globals.is_networking:
+		self.visible = false
 		if not is_multiplayer_authority():
-			self.visible = is_multiplayer_authority()
 			return
 
 	self.visible = false
+	
+
+	
 
 func _process(_delta):
 	if Globals.is_networking:
