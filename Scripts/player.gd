@@ -98,7 +98,7 @@ func _exit_tree():
 @rpc("any_peer", "call_local")
 func damage(value):
 	if not god_mode:
-		hearth = clamp(value, min_Hearth, Max_Hearth)
+		hearth = clamp(hearth - value, min_Hearth, Max_Hearth)
 
 		if hearth <= 0:
 			is_alive = false
