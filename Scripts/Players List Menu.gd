@@ -2,6 +2,8 @@ extends CanvasLayer
 
 @onready var list = $Panel/List
 
+var player_info = preload("res://Scenes/player_info.tscn")
+
 func _enter_tree() -> void:
 	if Globals.is_networking:
 		set_multiplayer_authority(get_parent().name.to_int())
@@ -27,15 +29,20 @@ func _process(_delta):
 
 		# Eliminar todos los hijos del VBoxContainer
 		for child in list.get_children():
-			list.remove_child(child)
+			if child.name == "Info":
+				continue
+
+			child.queue_free()
 
 		# Iterar sobre los jugadores conectados y agregarlos a la lista
 		if not Globals.players_conected.is_empty():
 			for player_data in Globals.players_conected:
 				if is_instance_valid(player_data):
-					var label = Label.new()
-					label.text = player_data.username + " points: " + str(player_data.points)
-					list.add_child(label, true)
+					var player_info_instance = player_info.instantiate()
+					player_info_instance.get_node("Username").text = player_data.username + " - "
+					player_info_instance.get_node("Points").text = str(player_data.points, " - ")
+					player_info_instance.get_node("Ping").text =  str(player_data.ping)
+					list.add_child(player_info_instance, true)
 
 		# Mostrar u ocultar la lista de jugadores según la acción del teclado
 		if Input.is_action_just_pressed("List of players"):

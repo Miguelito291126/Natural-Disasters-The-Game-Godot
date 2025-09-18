@@ -17,7 +17,6 @@ var mouse_action_state = false
 @onready var volumen_music = $"Panel/Settings/Volumen Music"
 @onready var time = $Panel/Settings/Time
 @onready var quality = $Panel/Settings/quality
-@onready var music = $Music
 @onready var resolutions = $Panel/Settings/resolutions
 
 var resolution = {

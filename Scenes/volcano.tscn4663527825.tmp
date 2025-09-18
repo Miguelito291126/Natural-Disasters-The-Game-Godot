@@ -195,6 +195,10 @@ radius = 40.4438
 
 [node name="volcano" type="StaticBody3D" groups=["Volcano"]]
 script = ExtResource("1_3fq1s")
+launch_interval = null
+launch_force = null
+launch_radius = null
+IsVolcanoAsh = null
 
 [node name="Smoke" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.30945, 361.779, -21.4574)

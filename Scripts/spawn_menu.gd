@@ -44,9 +44,11 @@ func load_buttons():
 		label.text = i.name
 		label.add_theme_font_size_override("FontSize", 20)
 		label.custom_minimum_size = Vector2(150, 150) # cada celda fija
+
 		var icon = entity.get_node("Icon")
+		var icon_image = load("res://Icons/" + i.name + "_icon.png")
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.texture_normal = load("res://Icons/" + i.name + "_icon.png")	
+		icon.texture_normal = icon_image
 		icon.custom_minimum_size = Vector2(64, 64) # icono fijo
 		container.add_child(entity)
 

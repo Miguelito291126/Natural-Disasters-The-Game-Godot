@@ -10,15 +10,30 @@ script = ExtResource("1_r0heg")
 [node name="Panel" type="Panel" parent="."]
 offset_left = 738.0
 offset_top = 288.0
-offset_right = 778.0
-offset_bottom = 328.0
-scale = Vector2(9.75896, 11.5355)
+offset_right = 1192.0
+offset_bottom = 803.0
 mouse_filter = 2
 theme = ExtResource("2_dqhul")
 
 [node name="List" type="VBoxContainer" parent="Panel"]
-offset_right = 20.0
-offset_bottom = 20.0
+layout_mode = 1
+offset_right = 225.5
+offset_bottom = 23.0
 scale = Vector2(2, 2)
 mouse_filter = 2
 theme = ExtResource("2_dqhul")
+
+[node name="Info" type="HBoxContainer" parent="Panel/List"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/List/Info"]
+layout_mode = 2
+text = "Name"
+
+[node name="Label2" type="Label" parent="Panel/List/Info"]
+layout_mode = 2
+text = "- Points"
+
+[node name="Label3" type="Label" parent="Panel/List/Info"]
+layout_mode = 2
+text = "- Ping"

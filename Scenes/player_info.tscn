@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://0jqlxc78b8b5"]
+
+[ext_resource type="Theme" uid="uid://ygba4u5d2q6c" path="res://Resources/Hud_Theme.tres" id="1_88m0k"]
+
+[node name="Player_info" type="HBoxContainer"]
+offset_right = 202.0
+offset_bottom = 23.0
+theme = ExtResource("1_88m0k")
+
+[node name="Username" type="Label" parent="."]
+layout_mode = 2
+text = "miguel"
+
+[node name="Points" type="Label" parent="."]
+layout_mode = 2
+text = "points: 0"
+
+[node name="Ping" type="Label" parent="."]
+layout_mode = 2
+text = "ping: 100"

@@ -1,7 +1,7 @@
 extends Node3D
 
 # Variables para configurar el lanzamiento de bolas de fuego
-var fireball_scene = preload("res://Scenes/meteors.tscn")  # Escena de la bola de fuego
+var fireball_scene = preload("res://Scenes/meteor.tscn")  # Escena de la bola de fuego
 var earthquake_scene = preload("res://Scenes/earthquake.tscn")
 @export var launch_interval = 5  # Intervalo de lanzamiento en segundos
 @export var launch_force = 50000  # Fuerza de lanzamiento de la bola de fuego
@@ -101,7 +101,7 @@ func erupt():
 			IsVolcanoAsh = false
 			queue_free()
 
-		Globals.points += 1
+		Globals.add_points.rpc()
 		
 		break
 

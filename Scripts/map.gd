@@ -88,7 +88,7 @@ func is_tsunami():
 		if is_instance_valid(tsunami):
 			tsunami.queue_free()
 		
-		Globals.points += 1
+		Globals.add_points.rpc()
 		
 		break
 
@@ -145,7 +145,7 @@ func is_linghting_storm():
 
 	while Globals.current_weather_and_disaster != "Linghting storm":
 
-		Globals.points += 1
+		Globals.add_points.rpc()
 		
 		break
 
@@ -181,7 +181,7 @@ func is_meteor_shower():
 
 	while Globals.current_weather_and_disaster != "Meteor shower":
 
-		Globals.points += 1
+		Globals.add_points.rpc()
 		
 		break
 
@@ -236,7 +236,7 @@ func is_blizzard():
 	
 	while Globals.current_weather_and_disaster != "blizzard":
 
-		Globals.points += 1
+		Globals.add_points.rpc()
 		
 		break
 
@@ -289,7 +289,7 @@ func is_sandstorm():
 
 	while Globals.current_weather_and_disaster != "Sand Storm":
 
-		Globals.points += 1
+		Globals.add_points.rpc()
 		
 		break
 
@@ -336,7 +336,7 @@ func is_volcano():
 			volcano.IsVolcanoAsh = false
 			volcano.queue_free()
 
-		Globals.points += 1
+		Globals.add_points.rpc()
 		
 		break
 
@@ -409,7 +409,7 @@ func is_tornado():
 		if is_instance_valid(tornado):
 			tornado.queue_free()
 
-		Globals.points += 1
+		Globals.add_points.rpc()
 
 		break
 	
@@ -450,7 +450,7 @@ func is_acid_rain():
 	
 	while Globals.current_weather_and_disaster != "Acid rain":
 
-		Globals.points += 1
+		Globals.add_points.rpc()
 		
 		break
 
@@ -484,7 +484,7 @@ func is_earthquake():
 		if is_instance_valid(earquake):
 			earquake.queue_free()
 		
-		Globals.points += 1
+		Globals.add_points.rpc()
 		
 		break
 
@@ -551,7 +551,7 @@ func is_cloud():
 
 	while Globals.current_weather_and_disaster != "Cloud":
 
-		Globals.points += 1
+		Globals.add_points.rpc()
 		
 		break
 
@@ -592,7 +592,7 @@ func is_raining():
 
 	while Globals.current_weather_and_disaster != "Raining":
 
-		Globals.points += 1
+		Globals.add_points.rpc()
 		
 		break
 
@@ -630,6 +630,6 @@ func is_storm():
 
 	while Globals.current_weather_and_disaster != "Storm":
 
-		Globals.points += 1
+		Globals.add_points.rpc()
 		
 		break

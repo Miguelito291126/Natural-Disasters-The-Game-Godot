@@ -67,10 +67,10 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 var player_scene = preload("res://Scenes/player.tscn")
 var linghting_scene = preload("res://Scenes/thunder.tscn")
-var meteor_scene = preload("res://Scenes/meteors.tscn")
+var meteor_scene = preload("res://Scenes/meteor.tscn")
 var tornado_scene = preload("res://Scenes/tornado.tscn")
 var tsunami_scene = preload("res://Scenes/tsunami.tscn")
-var volcano_scene = preload("res://Scenes/Volcano.tscn")
+var volcano_scene = preload("res://Scenes/volcano.tscn")
 var earthquake_scene = preload("res://Scenes/earthquake.tscn")
 
 @onready var timer = $Timer
@@ -667,6 +667,10 @@ func set_weather_and_disaster(weather_and_disaster_index):
 				map.is_blizzard()
 
 
+@rpc("any_peer", "call_local")
+func add_points():
+	points += 1
+
 func teleport_position(pos):
 	for player in self.get_children():
 		if player.is_multiplayer_authority() and player.is_in_group("player"):
@@ -754,12 +758,14 @@ func SetUpLisener():
 
 	
 func CloseUp():
-	lisener.close()
+	if lisener != null:
+		lisener.close()
 
 	if broadcaster != null:
 		broadcaster.close()
 
-	broadcast_Timer.stop()
+	if broadcast_Timer != null:
+		broadcast_Timer.stop()
 
 func SetUpBroadcast(Name):
 	room_list.name = Name

@@ -16,7 +16,7 @@ func _ready() -> void:
 			return
 
 	self.visible = true	
-	animation_player.play("Heartbeat")
+	animation_player.play("Hearth_Animation")
 
 func _enter_tree() -> void:
 	if Globals.is_networking:
