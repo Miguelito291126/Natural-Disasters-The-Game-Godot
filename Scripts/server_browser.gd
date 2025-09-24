@@ -22,6 +22,12 @@ func _process(delta: float) -> void:
 				i.server_port = str(server_port)
 				return
 
+
+		# si no existía, eliminar duplicados residuales
+		for i in list.get_children():
+			if i.server_ip == server_ip and i.server_port == str(server_port):
+				i.queue_free()
+
 		var currentinfo = serverinfo.instantiate()
 		currentinfo.name = room_list.name
 		currentinfo.get_node("Name").text = room_list.name + " / "
