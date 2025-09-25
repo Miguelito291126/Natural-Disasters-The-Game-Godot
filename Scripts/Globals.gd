@@ -1,5 +1,10 @@
 extends Node
 
+#Editor
+var version = ProjectSettings.get_setting("application/config/version")
+var gamename = ProjectSettings.get_setting("application/config/name")
+var credits = "Miguelillo223"
+
 #Network
 @export var ip: String
 @export var port: int = 5555

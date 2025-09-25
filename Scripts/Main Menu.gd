@@ -19,6 +19,8 @@ extends Control
 @onready var music = $Music
 @onready var error_text = $Panel/Multiplayer/Label
 @onready var resolutions = $Panel/Settings/resolutions
+@onready var version = $Panel/Version
+@onready var credits = $Panel/Credits
 
 var resolution: Dictionary = {
 	"2400x1080 ": Vector2i(2400, 1080 ),
@@ -62,6 +64,11 @@ func _ready():
 	Multiplayer.hide()
 	Settings.hide()
 	Multiplayer_list.hide()
+
+	version.text = "V" + Globals.version
+	tittle.text = Globals.gamename
+	credits.text = "by " + Globals.credits
+	
 
 	LoadGameScene()
 	Globals.SetUpLisener()
