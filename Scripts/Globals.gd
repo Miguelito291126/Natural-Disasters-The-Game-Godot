@@ -791,6 +791,9 @@ func SetUpBroadcast(Name):
 	else:
 		print_role("Broadcaster port %s FAILED!!" % broadcaster_port)
 
+	if broadcast_Timer != null:
+		broadcast_Timer.start()
+
 func _on_broadcast_timer_timeout() -> void:
 	room_list.players = players_conected.size()
 	var data = JSON.stringify(room_list)

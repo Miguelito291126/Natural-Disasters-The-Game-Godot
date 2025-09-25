@@ -39,4 +39,3 @@ func _process(_delta: float) -> void:
 		currentinfo.server_ip = server_ip
 		currentinfo.server_port = str(server_port)
 		list.add_child(currentinfo, true)
-
