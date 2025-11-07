@@ -482,25 +482,27 @@ func _ready():
 	multiplayer.connection_failed.connect(server_fail)
 
 	if OS.has_feature("dedicated_server") or "s" in OS.get_cmdline_user_args() or "server" in OS.get_cmdline_user_args():
-		Globals.print_role("Iniciando servidor...")
+		print_role("Iniciando servidor...")
 
 		var args = OS.get_cmdline_user_args()
-		for arg in args:
-			var key_value = arg.rsplit("=")
-			match key_value[0]:
+		for i in range(args.size()):
+			print_role("args: " + args[i])
+			match args[i]:
 				"--port", "port", "-p", "p":
-					Globals.port = key_value[1].to_int()
-					Globals.lisener_port = Globals.port + 1
-					Globals.broadcaster_port = Globals.port - 1
+					if i + 1 < args.size():
+						port = args[i + 1].to_int()
+						lisener_port = port + 1
+						broadcaster_port = port - 1
 
-		Globals.print_role("port: " + str(Globals.port))
-		Globals.print_role("ip: " + IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")), IP.TYPE_IPV4))
+		print_role("port: " + str(port))
+		print_role("ip: " + IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")), IP.TYPE_IPV4))
+		print_role("Iniciando servidor dedicado...")
 		
 		await get_tree().create_timer(2).timeout
 
-		Globals.hostwithport(Globals.port)
+		hostwithport(port)
 	else: 
-		Globals.print_role("No se puede jugar en modo de servidor")
+		print_role("No se puede jugar en modo de servidor")
 
 		
 func player_join(peer_id):

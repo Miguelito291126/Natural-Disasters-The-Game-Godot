@@ -47,5 +47,3 @@ func Reload(now):
 			if now - i.last_seen > TIMEOUT:
 				print("Eliminando servidor inactivo:", i.name)
 				i.queue_free()
-
-	print("Servidores activos:", list.get_child_count())
